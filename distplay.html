@@ -1,305 +1,40 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-    <title>distplay</title>
-    <style>
-        body {
-            background: black;
-            color: white;
-            font-family: sans-serif;
-        }
-
-        div {
-            height: 20px;
-            text-align: center;
-            vertical-align: middle;
-            font-size: 95.5%;
-        }
-
-        .stick {
-            width: 54px;
-            height: 54px;
-            -webkit-border-radius: 100px;
-            -moz-border-radius: 100px;
-            border-radius: 100px;
-            background: #6E6E6E;
-        }
-
-        .stick.back {
-            width: 80px;
-            height: 80px;
-            background: #252525;
-        }
-
-        .trigger {
-            width: 90px;
-        }
-
-        .trigger.fader {
-            display: none;
-        }
-
-        .trigger.slider {
-            display: unset;
-        }
-
-        .bumper {
-            width: 75px;
-        }
-
-        .facebutton {
-            width: 25px;
-            height: 17px;
-            padding: 4px 0px;
-            border-radius: 20px;
-        }
-
-        .dpadbutton {
-            width: 25px;
-            height: 25px;
-        }
-
-        .unpressed {
-            background: #252525;
-        }
-
-        .pressed {
-            background: #6E6E6E;
-        }
-
-        .pressed.stick {
-            background: white;
-        }
-    </style>
+    <title>Gamepad Visualiser</title>
+    <link rel="stylesheet" href="gamepad.css">
 </head>
 
 <body>
-    <!-- Sticks -->
-    <div class="stick back" style="position: absolute; top: 40px; left: 10px"></div>
-    <div id="ls" class="stick" style="position: absolute; top: 53px; left: 23px"></div>
-    <div class="stick back" style="position: absolute; top: 40px; left: 265px"></div>
-    <div id="rs" class="stick" style="position: absolute; top: 53px; left: 278px"></div>
+    <!-- Arranging the controller layout as a grid, top row is triggers/bumpers, left/right sides are sticks, middle is two columns of dpad, face buttons, bottom row is start/select -->
     <!-- Triggers -->
-    <div id="ltback" class="unpressed trigger" style="position: absolute; top: 5px; left: 5px"></div>
-    <div id="ltslider" class="pressed trigger slider" style="position: absolute; top: 5px; left: 5px; width: 0"></div>
-    <div id="ltfader" class="pressed trigger fader" style="position: absolute; top: 5px; left: 5px"></div>
-    <div id="lttext" class="trigger" style="position: absolute; top: 5px; left: 5px">LT</div>
-    <div id="rtback" class="unpressed trigger" style="position: absolute; top: 5px; left: 260px"></div>
-    <div id="rtslider" class="pressed trigger slider" style="position: absolute; top: 5px; left: 260px; width: 0"></div>
-    <div id="rtfader" class="pressed trigger fader" style="position: absolute; top: 5px; left: 260px"></div>
-    <div id="rttext" class="trigger" style="position: absolute; top: 5px; left: 260px">RT</div>
+    <span id="lt" class="trigger input">LT</span>
+    <span id="rt" class="trigger input">RT</span>
     <!-- Bumpers -->
-    <div id="lb" class="unpressed bumper" style="position: absolute; top: 5px; left: 100px">LB</div>
-    <div id="rb" class="unpressed bumper" style="position: absolute; top: 5px; left: 180px">RB</div>
+    <span id="lb" class="bumper input">LB</span>
+    <span id="rb" class="bumper input">RB</span>
+    <!-- Sticks -->
+    <div id="ls" class="stick"><span id="ls_cursor" class="input"></span></div>
+    <div id="rs" class="stick"><span id="rs_cursor" class="input"></span></div>
     <!-- Dpad -->
-    <div id="dup" class="unpressed dpadbutton" style="position: absolute; top: 35px; left: 125px"></div>
-    <div id="dleft" class="unpressed dpadbutton" style="position: absolute; top: 60px; left: 100px"></div>
-    <div id="dright" class="unpressed dpadbutton" style="position: absolute; top: 60px; left: 150px"></div>
-    <div id="ddown" class="unpressed dpadbutton" style="position: absolute; top: 85px; left: 125px"></div>
-    <div id="dcenter" class="unpressed dpadbutton" style="position: absolute; top: 60px; left: 125px"></div>
+    <div id="dpad" class="buttongroup">
+        <span id="dup" class="input up"></span>
+        <span id="dleft" class="input left"></span>
+        <span id="dright" class="input right"></span>
+        <span id="ddown" class="input down"></span>
+    </div>
     <!-- Face buttons  -->
-    <div id="y" class="unpressed facebutton" style="position: absolute; top: 35px; left: 205px">Y</div>
-    <div id="x" class="unpressed facebutton" style="position: absolute; top: 60px; left: 180px">X</div>
-    <div id="b" class="unpressed facebutton" style="position: absolute; top: 60px; left: 230px">B</div>
-    <div id="a" class="unpressed facebutton" style="position: absolute; top: 85px; left: 205px">A</div>
+    <div id="facebuttons" class="buttongroup">
+        <div id="y" class="input up">Y</div>
+        <div id="x" class="input left">X</div>
+        <div id="b" class="input right">B</div>
+        <div id="a" class="input down">A</div>
+    </div>
     <!-- Misc buttons -->
-    <div id="select" class="unpressed bumper" style="position: absolute; top: 120px; left: 100px">&lt;</div>
-    <div id="start" class="unpressed bumper" style="position: absolute; top: 120px; left: 180px">&gt;</div>
+    <div id="select" class="input">&lt;</div>
+    <div id="start" class="input">&gt;</div>
 
-    <label style="position: absolute; top: 150px; left: 5px">Trigger style: <select id="triggerstyle"><option value="s">Slider</option><option value="f">Fade</option></select></label>
-    
-    <script>
-        const rtslider = document.getElementById('rtslider');
-        const ltslider = document.getElementById('ltslider');
-        const rtfader = document.getElementById('rtfader');
-        const ltfader = document.getElementById('ltfader');
-        const rb = document.getElementById('rb');
-        const lb = document.getElementById('lb');
-        const a = document.getElementById('a');
-        const b = document.getElementById('b');
-        const x = document.getElementById('x');
-        const y = document.getElementById('y');
-        const dup = document.getElementById('dup');
-        const ddown = document.getElementById('ddown');
-        const dleft = document.getElementById('dleft');
-        const dright = document.getElementById('dright');
-        const ls = document.getElementById('ls');
-        const rs = document.getElementById('rs');
-        const start = document.getElementById('start');
-        const select = document.getElementById('select');
-
-        const STICK_TRAVEL = 18;
-        const LSTICK_NEUTRAL_TOP = parseInt(ls.offsetTop, 10);
-        const LSTICK_NEUTRAL_LEFT = parseInt(ls.offsetLeft, 10);
-        const RSTICK_NEUTRAL_TOP = parseInt(rs.offsetTop, 10);
-        const RSTICK_NEUTRAL_LEFT = parseInt(rs.offsetLeft, 10);
-
-        const TRIGGER_WIDTH = 90;
-        const LTRIGGER_LEFT = parseInt(ltslider.offsetLeft, 10);
-
-        window.onload = function WindowLoad(event) {
-            if (typeof(require) === "function") {
-                try {
-                    const remote = require('electron').remote;
-                    const win = remote.getCurrentWindow();
-                    win.setSize(355, 145);
-                } catch (e) {
-                    //not critical if this fails, just log and continue.
-                    console.log(e);
-                }
-            }
-            const styleselect = document.getElementById("triggerstyle");
-            const cssRules = document.styleSheets[0].cssRules || document.styleSheets[0].rules;
-            const sliderRule = Array.prototype.find.call(cssRules, function(element) {
-                return element.selectorText === ".trigger.slider";
-            });
-            const faderRule = Array.prototype.find.call(cssRules, function(element) {
-                return element.selectorText === ".trigger.fader";
-            });
-
-            styleselect.onchange = function () {
-                if (this.value === "s") {
-                    sliderRule.style.display = "unset";
-                    faderRule.style.display = "none";
-                } else {
-                    sliderRule.style.display = "none";
-                    faderRule.style.display = "unset";
-                }
-            }
-
-            loop();
-        }
-
-        function loop() {
-            const gamepads = navigator.getGamepads()
-            if (gamepads[0] != undefined) {
-                const gp = gamepads[0];
-
-                if (gp.buttons[0].pressed) {
-                    a.className = "pressed facebutton";
-                }
-                else {
-                    a.className = "unpressed facebutton";
-                }
-
-                if (gp.buttons[1].pressed) {
-                    b.className = "pressed facebutton";
-                }
-                else {
-                    b.className = "unpressed facebutton";
-                }
-
-                if (gp.buttons[2].pressed) {
-                    x.className = "pressed facebutton";
-                }
-                else {
-                    x.className = "unpressed facebutton";
-                }
-
-                if (gp.buttons[3].pressed) {
-                    y.className = "pressed facebutton";
-                }
-                else {
-                    y.className = "unpressed facebutton";
-                }
-
-                if (gp.buttons[4].pressed) {
-                    lb.className = "pressed bumper";
-                }
-                else {
-                    lb.className = "unpressed bumper";
-                }
-
-                if (gp.buttons[5].pressed) {
-                    rb.className = "pressed bumper";
-                }
-                else {
-                    rb.className = "unpressed bumper";
-                }
-
-                if (gp.buttons[8].pressed) {
-                    select.className = "pressed bumper";
-                }
-                else {
-                    select.className = "unpressed bumper";
-                }
-
-                if (gp.buttons[9].pressed) {
-                    start.className = "pressed bumper";
-                }
-                else {
-                    start.className = "unpressed bumper";
-                }
-
-                if (gp.buttons[10].pressed) {
-                    ls.className = "stick pressed";
-                }
-                else {
-                    ls.className = "stick";
-                }
-
-                if (gp.buttons[11].pressed) {
-                    rs.className = "stick pressed";
-                }
-                else {
-                    rs.className = "stick";
-                }
-
-                if (gp.buttons[7].pressed) {
-                    rtslider.style.width = gp.buttons[7].value * TRIGGER_WIDTH + 'px';
-                    rtfader.style.opacity = gp.buttons[7].value ;
-                }
-                else {
-                    rtslider.style.width = "0";
-                    rtfader.style.opacity = "0";
-                }
-
-                ltslider.style.left = LTRIGGER_LEFT + (1 - gp.buttons[6].value) * TRIGGER_WIDTH + 'px';
-                if (gp.buttons[6].pressed) {
-                    ltslider.style.width = gp.buttons[6].value * TRIGGER_WIDTH + 'px';
-                    ltfader.style.opacity = gp.buttons[6].value;
-                }
-                else {
-                    ltslider.style.width = "0";
-                    ltfader.style.opacity = "0";
-                }
-
-                ls.style.left = LSTICK_NEUTRAL_LEFT + gp.axes[0] * STICK_TRAVEL + 'px'
-                ls.style.top = LSTICK_NEUTRAL_TOP + gp.axes[1] * STICK_TRAVEL + 'px'
-                rs.style.left = RSTICK_NEUTRAL_LEFT + gp.axes[2] * STICK_TRAVEL + 'px'
-                rs.style.top = RSTICK_NEUTRAL_TOP + gp.axes[3] * STICK_TRAVEL + 'px'
-
-                if (gp.buttons[12].pressed) {
-                    dup.className = "pressed dpadbutton"
-                    ddown.className = "unpressed dpadbutton"
-                }
-                else if (gp.buttons[13].pressed) {
-                    dup.className = "unpressed dpadbutton"
-                    ddown.className = "pressed dpadbutton"
-                }
-                else {
-                    dup.className = "unpressed dpadbutton"
-                    ddown.className = "unpressed dpadbutton"
-                }
-
-                if (gp.buttons[14].pressed) {
-                    dleft.className = "pressed dpadbutton"
-                    dright.className = "unpressed dpadbutton"
-                }
-                else if (gp.buttons[15].pressed) {
-                    dleft.className = "unpressed dpadbutton"
-                    dright.className = "pressed dpadbutton"
-                }
-                else {
-                    dleft.className = "unpressed dpadbutton"
-                    dright.className = "unpressed dpadbutton"
-                }
-            }
-
-            requestAnimationFrame(loop);
-        }
-    </script>
+    <script src="visualiser.js"></script>
 </body>
 
 </html>

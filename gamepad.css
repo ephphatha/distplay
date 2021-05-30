@@ -1,0 +1,112 @@
+body {
+  background: black;
+  color: white;
+  font-family: sans-serif;
+  margin: 5px;
+  display: grid;
+  grid-template-columns: 90px 75px 75px 90px;
+  grid-template-areas:
+    "ltrigger lbumper rbumper rtrigger"
+    "lstick dpad facebuttons rstick"
+    "lstick select start rstick";
+  grid-auto-rows: 20px 75px 20px;
+  gap: 5px;
+}
+
+.input {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 95.5%;
+  background: #252525;
+}
+
+.input[data-pressed="true"] {
+  background: #6E6E6E;
+}
+
+.trigger {
+  background-color: mix;
+}
+
+#lt {
+  grid-area: ltrigger;
+}
+
+#rt {
+  grid-area: rtrigger;
+}
+
+#lb {
+  grid-area: lbumper;
+}
+
+#rb {
+  grid-area: rbumper;
+}
+
+.stick {
+  border-radius: 100px;
+  background: #252525;
+}
+
+.stick .input {
+  background: #6E6E6E;
+}
+
+.stick .input.pressed {
+  background: white;
+}
+
+#ls {
+  grid-area: lstick;
+}
+
+#rs {
+  grid-area: rstick;
+}
+
+.buttongroup {
+  display: grid;
+  grid-template-areas:
+    ". up ."
+    "left . right"
+    ". down .";
+  grid-auto-rows: 25px;
+}
+
+.buttongroup .up {
+  grid-area: up;
+}
+
+.buttongroup .left {
+  grid-area: left;
+}
+
+.buttongroup .right {
+  grid-area: right;
+}
+
+.buttongroup .down {
+  grid-area: down;
+}
+
+#dpad {
+  grid-area: dpad;
+}
+
+#facebuttons {
+  grid-area: facebuttons;
+}
+
+#facebuttons .input {
+  border-radius: 20px;
+}
+
+#select {
+  grid-area: select;
+}
+
+#start {
+  grid-area: start;
+}
