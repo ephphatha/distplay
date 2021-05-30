@@ -36,6 +36,14 @@
             width: 90px;
         }
 
+        .trigger.fader {
+            display: none;
+        }
+
+        .trigger.slider {
+            display: unset;
+        }
+
         .bumper {
             width: 75px;
         }
@@ -74,10 +82,12 @@
     <div id="rs" class="stick" style="position: absolute; top: 53px; left: 278px"></div>
     <!-- Triggers -->
     <div id="ltback" class="unpressed trigger" style="position: absolute; top: 5px; left: 5px"></div>
-    <div id="lt" class="pressed trigger" style="position: absolute; top: 5px; left: 5px; width: 0"></div>
+    <div id="ltslider" class="pressed trigger slider" style="position: absolute; top: 5px; left: 5px; width: 0"></div>
+    <div id="ltfader" class="pressed trigger fader" style="position: absolute; top: 5px; left: 5px"></div>
     <div id="lttext" class="trigger" style="position: absolute; top: 5px; left: 5px">LT</div>
     <div id="rtback" class="unpressed trigger" style="position: absolute; top: 5px; left: 260px"></div>
-    <div id="rt" class="pressed trigger" style="position: absolute; top: 5px; left: 260px; width: 0"></div>
+    <div id="rtslider" class="pressed trigger slider" style="position: absolute; top: 5px; left: 260px; width: 0"></div>
+    <div id="rtfader" class="pressed trigger fader" style="position: absolute; top: 5px; left: 260px"></div>
     <div id="rttext" class="trigger" style="position: absolute; top: 5px; left: 260px">RT</div>
     <!-- Bumpers -->
     <div id="lb" class="unpressed bumper" style="position: absolute; top: 5px; left: 100px">LB</div>
@@ -96,10 +106,14 @@
     <!-- Misc buttons -->
     <div id="select" class="unpressed bumper" style="position: absolute; top: 120px; left: 100px">&lt;</div>
     <div id="start" class="unpressed bumper" style="position: absolute; top: 120px; left: 180px">&gt;</div>
+
+    <label style="position: absolute; top: 150px; left: 5px">Trigger style: <select id="triggerstyle"><option value="s">Slider</option><option value="f">Fade</option></select></label>
     
     <script>
-        const rt = document.getElementById('rt');
-        const lt = document.getElementById('lt');
+        const rtslider = document.getElementById('rtslider');
+        const ltslider = document.getElementById('ltslider');
+        const rtfader = document.getElementById('rtfader');
+        const ltfader = document.getElementById('ltfader');
         const rb = document.getElementById('rb');
         const lb = document.getElementById('lb');
         const a = document.getElementById('a');
@@ -116,13 +130,13 @@
         const select = document.getElementById('select');
 
         const STICK_TRAVEL = 18;
-        const LSTICK_NEUTRAL_TOP = parseInt(ls.style.top, 10);
-        const LSTICK_NEUTRAL_LEFT = parseInt(ls.style.left, 10);
-        const RSTICK_NEUTRAL_TOP = parseInt(rs.style.top, 10);
-        const RSTICK_NEUTRAL_LEFT = parseInt(rs.style.left, 10);
+        const LSTICK_NEUTRAL_TOP = parseInt(ls.offsetTop, 10);
+        const LSTICK_NEUTRAL_LEFT = parseInt(ls.offsetLeft, 10);
+        const RSTICK_NEUTRAL_TOP = parseInt(rs.offsetTop, 10);
+        const RSTICK_NEUTRAL_LEFT = parseInt(rs.offsetLeft, 10);
 
         const TRIGGER_WIDTH = 90;
-        const LTRIGGER_LEFT = parseInt(lt.style.left, 10);
+        const LTRIGGER_LEFT = parseInt(ltslider.offsetLeft, 10);
 
         window.onload = function WindowLoad(event) {
             if (typeof(require) === "function") {
@@ -135,6 +149,25 @@
                     console.log(e);
                 }
             }
+            const styleselect = document.getElementById("triggerstyle");
+            const cssRules = document.styleSheets[0].cssRules || document.styleSheets[0].rules;
+            const sliderRule = Array.prototype.find.call(cssRules, function(element) {
+                return element.selectorText === ".trigger.slider";
+            });
+            const faderRule = Array.prototype.find.call(cssRules, function(element) {
+                return element.selectorText === ".trigger.fader";
+            });
+
+            styleselect.onchange = function () {
+                if (this.value === "s") {
+                    sliderRule.style.display = "unset";
+                    faderRule.style.display = "none";
+                } else {
+                    sliderRule.style.display = "none";
+                    faderRule.style.display = "unset";
+                }
+            }
+
             loop();
         }
 
@@ -214,18 +247,22 @@
                 }
 
                 if (gp.buttons[7].pressed) {
-                    rt.style.width = gp.buttons[7].value * TRIGGER_WIDTH + 'px';
+                    rtslider.style.width = gp.buttons[7].value * TRIGGER_WIDTH + 'px';
+                    rtfader.style.opacity = gp.buttons[7].value ;
                 }
                 else {
-                    rt.style.width = "0";
+                    rtslider.style.width = "0";
+                    rtfader.style.opacity = "0";
                 }
 
-                lt.style.left = LTRIGGER_LEFT + (1 - gp.buttons[6].value) * TRIGGER_WIDTH + 'px';
+                ltslider.style.left = LTRIGGER_LEFT + (1 - gp.buttons[6].value) * TRIGGER_WIDTH + 'px';
                 if (gp.buttons[6].pressed) {
-                    lt.style.width = gp.buttons[6].value * TRIGGER_WIDTH + 'px';
+                    ltslider.style.width = gp.buttons[6].value * TRIGGER_WIDTH + 'px';
+                    ltfader.style.opacity = gp.buttons[6].value;
                 }
                 else {
-                    lt.style.width = "0";
+                    ltslider.style.width = "0";
+                    ltfader.style.opacity = "0";
                 }
 
                 ls.style.left = LSTICK_NEUTRAL_LEFT + gp.axes[0] * STICK_TRAVEL + 'px'

@@ -29,6 +29,18 @@ set the colour transparency key to black.
 You can also open distplay[-distance].html in a browser and use window
 capture as described above, alternatively use a BrowserCapture source in
 OBS and the default style rule it injects will handle transparency for you.
+
+Set the browser capture window size to 355x145 pixels (or crop the window
+capture to these dimensions if using a browser/electron window) so the
+options don't appear on your stream.
+
+## Options
+Two trigger styles are provided and can be selected from the dropdown when
+using a browser window. If you're using OBS's BrowserCapture source add
+the following CSS rules in the properties to switch to the fade in style:
+
+    .trigger.fader { display: unset; }
+    .trigger.slider { display: none; }
   
 ## Display mapping
 The display for the display mapped by default as:
