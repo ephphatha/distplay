@@ -28,11 +28,7 @@ const inputs = [
   document.getElementById('dright'),
 ];
 
-window.onload = function WindowLoad(event) {
-    loop();
-}
-
-function loop() {
+window.onload = function loop() {
     const gamepads = navigator.getGamepads()
     if (gamepads[0] != undefined) {
         const gp = gamepads[0];
@@ -44,6 +40,10 @@ function loop() {
         // trigger axes
         for (const index of [6, 7]) {
           inputs[index].dataset.value = gp.buttons[index].value;
+
+          // Wonder if there's a way to do this sort of effect in css? possibly could be done with attr() but setting direction would be a bit weird.
+          const triggerPercent = gp.buttons[index].value * 100;
+          inputs[index].style.background = `linear-gradient(to ${index === 6 ? 'left' : 'right'}, #6e6e6e ${triggerPercent}%, #252525 ${triggerPercent}%)`;
         }
 
         // stick axes
@@ -51,6 +51,12 @@ function loop() {
         inputs[10].dataset.y = gp.axes[1];
         inputs[11].dataset.x = gp.axes[2];
         inputs[11].dataset.y = gp.axes[3];
+        // for now the css attr() function can't be used to set left/top, but it would be nice to not have to reference style at all.
+        const STICK_TRAVEL = 25;
+        inputs[10].style.left = `${gp.axes[0] * STICK_TRAVEL}%`;
+        inputs[10].style.top = `${gp.axes[1] * STICK_TRAVEL}%`;
+        inputs[11].style.left = `${gp.axes[2] * STICK_TRAVEL}%`;
+        inputs[11].style.top = `${gp.axes[3] * STICK_TRAVEL}%`;
     }
 
     requestAnimationFrame(loop);
