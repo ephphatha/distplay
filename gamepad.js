@@ -53,10 +53,8 @@ window.onload = function loop() {
         inputs[11].dataset.y = gp.axes[3];
         // for now the css attr() function can't be used to set left/top, but it would be nice to not have to reference style at all.
         const STICK_TRAVEL = 25;
-        inputs[10].style.left = `${gp.axes[0] * STICK_TRAVEL}%`;
-        inputs[10].style.top = `${gp.axes[1] * STICK_TRAVEL}%`;
-        inputs[11].style.left = `${gp.axes[2] * STICK_TRAVEL}%`;
-        inputs[11].style.top = `${gp.axes[3] * STICK_TRAVEL}%`;
+        inputs[10].style.transform = `translate(${gp.axes[0] * STICK_TRAVEL}%, ${gp.axes[1] * STICK_TRAVEL}%)`;
+        inputs[11].style.transform = `translate(${gp.axes[2] * STICK_TRAVEL}%, ${gp.axes[3] * STICK_TRAVEL}%)`;
     }
 
     requestAnimationFrame(loop);

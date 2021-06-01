@@ -52,19 +52,16 @@ body {
   margin: 10%;
   background: #252525;
   display: grid;
-  grid: "cursor" 1fr / 1fr;
 }
 
-.stick .input {
+.stick .cursor {
   background: #6E6E6E;
-  transform: scale(0.7);
   border-radius: 50%;
-  position: relative;
-  left: calc(attr(data-x) * 25%);
-  top: calc(attr(data-y) * 25%);
+  padding: 35%;
+  place-self: center;
 }
 
-.stick .input[data-pressed="true"] {
+.stick .cursor[data-pressed="true"] {
   background: white;
 }
 
@@ -108,10 +105,6 @@ body {
 
 #dpad {
   grid-area: dpad;
-}
-
-#dpad .centre {
-  border: 50% solid #252525;
 }
 
 #facebuttons {
