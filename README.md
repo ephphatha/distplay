@@ -3,3 +3,6 @@ This repository was originally forked from https://github.com/Tiyenti/distplay, 
 
 If you want to remap buttons distplay has a nice configuration that'd save editing the source. Otherwise it should
 be possible to change the array in gamepad.js to suit.
+
+This code works when rendered as an OBS BrowserSource. For best results set your size at a ratio of 50:17 (e.g. 
+350px wide and 119px high)
