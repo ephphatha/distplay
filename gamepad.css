@@ -2,15 +2,22 @@ body {
   background: black;
   color: white;
   font-family: sans-serif;
+  margin: 0;
+  font-size: 4vw;
   display: grid;
   grid-template-areas:
     "ltrigger lbumper rbumper rtrigger"
     "lstick dpad facebuttons rstick"
     "lstick select start rstick";
-  grid-template-columns: 4fr 3fr 3fr 4fr;
-  column-gap: 0.5em;
-  grid-template-rows: 1fr auto 1fr;
-  row-gap: 0.5em;
+  /* The rendered ratio is exactly 100:34 (50:17) with the following dimensions. This seems to give the
+  * best balance between the size of the dpad and the size of the sticks, otherwise the buttons need to
+  * get huge to compensate.
+  */
+  grid-template-columns: 27vw 21vw 21vw 27vw;
+  column-gap: 1vw;
+  grid-template-rows: 5vw 21vw 5vw;
+  row-gap: 1vw;
+  padding: 0.5vw;
 }
 
 .input {
@@ -44,16 +51,13 @@ body {
   border-radius: 50%;
   margin: 10%;
   background: #252525;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  aspect-ratio: 1 / 1;
+  display: grid;
+  grid: "cursor" 1fr / 1fr;
 }
 
 .stick .input {
   background: #6E6E6E;
-  width: 70%;
-  height: 70%;
+  transform: scale(0.7);
   border-radius: 50%;
   position: relative;
   left: calc(attr(data-x) * 25%);
@@ -80,7 +84,6 @@ body {
     ". down .";
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
-  aspect-ratio: 1 / 1;
 }
 
 .buttongroup .up {
@@ -113,11 +116,13 @@ body {
 
 #facebuttons {
   grid-area: facebuttons;
+  /* Using scale transforms to bring the buttons closer together, makes it look visually pleasing */
+  transform: scale(0.95);
 }
 
 #facebuttons .input {
   border-radius: 50%;
-  transform: scale(1.1);
+  transform: scale(1.2);
 }
 
 #select {
