@@ -51,14 +51,14 @@ body {
   border-radius: 50%;
   margin: 10%;
   background: #252525;
-  display: grid;
+  padding: 12%;
 }
 
 .stick .cursor {
   background: #6E6E6E;
   border-radius: 50%;
-  padding: 35%;
-  place-self: center;
+  width: 100%;
+  height: 100%;
 }
 
 .stick .cursor[data-pressed="true"] {

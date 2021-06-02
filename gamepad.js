@@ -52,7 +52,7 @@ window.onload = function loop() {
         inputs[11].dataset.x = gp.axes[2];
         inputs[11].dataset.y = gp.axes[3];
         // for now the css attr() function can't be used to set left/top, but it would be nice to not have to reference style at all.
-        const STICK_TRAVEL = 35; // 35% max travel seems to work well given the radius of the cursor is 35% anyway
+        const STICK_TRAVEL = 35; // can't work out the relation to the element size anymore ¯\_(ツ)_/¯
         inputs[10].style.transform = `translate(${gp.axes[0] * STICK_TRAVEL}%, ${gp.axes[1] * STICK_TRAVEL}%)`;
         inputs[11].style.transform = `translate(${gp.axes[2] * STICK_TRAVEL}%, ${gp.axes[3] * STICK_TRAVEL}%)`;
     }
